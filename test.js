@@ -8,16 +8,12 @@ const modifyUsers = (users) => {
     if (!obj[user.gender]) {
       obj[user.gender] = [];
     }
-    const newUser = {};
-    Object.assign(newUser, user);
-    newUser.fullName = `${user.first_name} ${user.last_name}`;
-    delete newUser.first_name;
-    delete newUser.last_name;
+    let { first_name, last_name, ...newUser } = user;
+    newUser.fullName = `${first_name} ${last_name}`;
     obj[user.gender].push(newUser);
     return obj;
   }, {});
 };
-
 /* 2. Преобразуйте массив в объект используя функцию reduce.*/
 
 const arrayToObject = (array) => {
@@ -41,17 +37,14 @@ const getHighId = (releases) => {
 /*4. С помощью функций map, reduce, вывести url у которого самая большая площадь*/
 
 const getBiggestSquare = (boxarts) => {
-  const maxSquare = boxarts.reduce(
-    (max, boxart) =>
-      boxart.width * boxart.height > max ? boxart.width * boxart.height : max,
-    0
-  );
   let url;
-  boxarts.map((boxart) => {
-    if (boxart.height * boxart.width === maxSquare) {
+  const maxSquare = boxarts.reduce((max, boxart) => {
+    if (boxart.width * boxart.height > max) {
       url = boxart.url;
+      return boxart.width * boxart.height;
     }
-  });
+    return max;
+  }, 0);
   return url;
 };
 
@@ -60,23 +53,15 @@ const getBiggestSquare = (boxarts) => {
 а строчные числовыми*/
 
 const numbersAndStrings = (elements) => {
-  return elements.reduce((modifyElements, element) => {
-    if (Number.isInteger(element)) {
-      modifyElements.push(element + "");
-    } else {
-      modifyElements.push(+element);
-    }
-    return modifyElements;
-  }, []);
+  return elements.map((element) =>
+    Number.isInteger(element) ? element + "" : +element
+  );
 };
 
 /*8 написать функцию которая принимает в себя 2 массива, а возвращает один, состоящий из 2
 которые пришли в нее*/
 const joinArrays = (firstArray, secondArray) => {
-  return secondArray.reduce((currentArray, item) => {
-    currentArray.push(item);
-    return currentArray;
-  }, firstArray);
+  return [...firstArray, ...secondArray];
 };
 
 /* 9. написать функцию которая принимает слудующие значения: первым аргументом - строковое значение,
